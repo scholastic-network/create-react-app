@@ -1,0 +1,68 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
+        "prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["react", "react-hooks"],
+    "globals": {
+        "process": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "rules": {
+        "linebreak-style": ["error", "windows"],
+        "indent": [
+            0,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "no-case-declarations": "off",
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
+        "react/no-unused-prop-types": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off",
+        "react/self-closing-comp": [
+            "error",
+            {
+                "component": true
+            }
+        ],
+        "react/jsx-boolean-value": "error",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
+    }
+}

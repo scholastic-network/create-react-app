@@ -72,6 +72,7 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
+  lib: resolveApp(`./../scholastic-client-components`),
   publicUrlOrPath,
 };
 
@@ -94,6 +95,8 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
+  lib: resolveApp(`./../scholastic-client-components`),
+  libNodeModules: resolveApp(`./../scholastic-client-components/nodeModules`),
   publicUrlOrPath,
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
@@ -129,6 +132,8 @@ if (
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
     appNodeModules: resolveOwn('node_modules'),
+    lib: resolveOwn(`../scholastic-client-components`),
+    resolveOwn: resolveApp(`../scholastic-client-components/nodeModules`),
     publicUrlOrPath,
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),

@@ -32,6 +32,9 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+
 // @remove-on-eject-begin
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
@@ -62,7 +65,7 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function(webpackEnv) {
+module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -190,12 +193,13 @@ module.exports = function(webpackEnv) {
       publicPath: paths.publicUrlOrPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
-        ? info =>
+        ? (info) =>
             path
               .relative(paths.appSrc, info.absoluteResourcePath)
               .replace(/\\/g, '/')
         : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+          ((info) =>
+            path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
       // Prevents conflicts when multiple webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
@@ -278,7 +282,7 @@ module.exports = function(webpackEnv) {
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
       runtimeChunk: {
-        name: entrypoint => `runtime-${entrypoint.name}`,
+        name: (entrypoint) => `runtime-${entrypoint.name}`,
       },
     },
     resolve: {
@@ -296,8 +300,8 @@ module.exports = function(webpackEnv) {
       // `web` extension prefixes have been added for better support
       // for React Native Web.
       extensions: paths.moduleFileExtensions
-        .map(ext => `.${ext}`)
-        .filter(ext => useTypeScript || !ext.includes('ts')),
+        .map((ext) => `.${ext}`)
+        .filter((ext) => useTypeScript || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -308,6 +312,11 @@ module.exports = function(webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+        react: path.resolve('./node_modules/react'),
+        'react-router-dom': path.resolve('./node_modules/react-router-dom'),
+        'scholastic-client-components': path.resolve(
+          '../scholastic-client-components/index.ts'
+        ),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -318,7 +327,7 @@ module.exports = function(webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        // new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       ],
     },
     resolveLoader: {
@@ -333,34 +342,6 @@ module.exports = function(webpackEnv) {
       rules: [
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
-
-        // First, run the linter.
-        // It's important to do this before Babel processes the JS.
-        {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
-          enforce: 'pre',
-          use: [
-            {
-              options: {
-                cache: true,
-                formatter: require.resolve('react-dev-utils/eslintFormatter'),
-                eslintPath: require.resolve('eslint'),
-                resolvePluginsRelativeTo: __dirname,
-                // @remove-on-eject-begin
-                ignore: isExtendingEslintConfig,
-                baseConfig: isExtendingEslintConfig
-                  ? undefined
-                  : {
-                      extends: [require.resolve('eslint-config-react-app')],
-                    },
-                useEslintrc: isExtendingEslintConfig,
-                // @remove-on-eject-end
-              },
-              loader: require.resolve('eslint-loader'),
-            },
-          ],
-          include: paths.appSrc,
-        },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -381,7 +362,7 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: [paths.appSrc, paths.lib],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -390,7 +371,10 @@ module.exports = function(webpackEnv) {
                 // @remove-on-eject-begin
                 babelrc: false,
                 configFile: false,
-                presets: [require.resolve('babel-preset-react-app')],
+                presets: [
+                  '@babel/typescript',
+                  ['react-app', { flow: false, typescript: true }],
+                ],
                 // Make sure we have a unique cache identifier, erring on the
                 // side of caution.
                 // We remove this when the user ejects because the default
@@ -558,6 +542,23 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+      isEnvDevelopment &&
+        new ESLintPlugin({
+          cache: false,
+          formatter: require.resolve('react-dev-utils/eslintFormatter'),
+          eslintPath: require.resolve('eslint'),
+          resolvePluginsRelativeTo: __dirname,
+          files: ['./src', './../scholastic-client-components/src'],
+          extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
+          fix: true,
+          useEslintrc: true,
+          failOnError: false,
+          failOnWarning: false,
+          emitError: false,
+          emitWarning: false,
+          quiet: true,
+          lintDirtyModulesOnly: true,
+        }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -639,7 +640,7 @@ module.exports = function(webpackEnv) {
             return manifest;
           }, seed);
           const entrypointFiles = entrypoints.main.filter(
-            fileName => !fileName.endsWith('.map')
+            (fileName) => !fileName.endsWith('.map')
           );
 
           return {
@@ -699,6 +700,12 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      new CircularDependencyPlugin({
+        // exclude detection of files based on a RegExp
+        exclude: /node_modules/,
+        // add errors to webpack instead of warnings
+        failOnError: true,
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.

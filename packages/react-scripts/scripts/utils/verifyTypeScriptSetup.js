@@ -128,11 +128,18 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
-    paths: { value: undefined, reason: 'aliased imports are not supported' },
+    baseUrl: { suggested: '.' },
+    paths: {
+      suggested: {
+        'scholastic-client-components': [
+          '../scholastic-client-components/index.ts',
+        ],
+      },
+    },
   };
 
   const formatDiagnosticHost = {
-    getCanonicalFileName: fileName => fileName,
+    getCanonicalFileName: (fileName) => fileName,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
     getNewLine: () => os.EOL,
   };
@@ -157,7 +164,7 @@ function verifyTypeScriptSetup() {
     // Calling this function also mutates the tsconfig above,
     // adding in "include" and "exclude", but the compilerOptions remain untouched
     let result;
-    parsedTsConfig = immer(readTsConfig, config => {
+    parsedTsConfig = immer(readTsConfig, (config) => {
       result = ts.parseJsonConfigFileContent(
         config,
         ts.sys,
@@ -220,7 +227,11 @@ function verifyTypeScriptSetup() {
 
   // tsconfig will have the merged "include" and "exclude" by this point
   if (parsedTsConfig.include == null) {
-    appTsConfig.include = ['src'];
+    appTsConfig.include = [
+      'src',
+      'declare.d.ts',
+      '../scholastic-client-components',
+    ];
     messages.push(
       `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
     );
@@ -244,7 +255,7 @@ function verifyTypeScriptSetup() {
           'file:'
         )
       );
-      messages.forEach(message => {
+      messages.forEach((message) => {
         console.warn('  - ' + message);
       });
       console.warn();
@@ -256,7 +267,7 @@ function verifyTypeScriptSetup() {
   if (!fs.existsSync(paths.appTypeDeclarations)) {
     fs.writeFileSync(
       paths.appTypeDeclarations,
-      `/// <reference types="react-scripts" />${os.EOL}`
+      `/// <reference types="scholastic-react-scripts" />${os.EOL}`
     );
   }
 }
