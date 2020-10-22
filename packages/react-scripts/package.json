@@ -1,17 +1,14 @@
 {
-  "name": "scholastic-react-scripts",
+  "name": "tsn-react-scripts",
   "version": "3.4.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/create-react-app.git",
+    "url": "https://github.com/scholastic-network/create-react-app.git",
     "directory": "packages/react-scripts"
   },
   "license": "MIT",
   "engines": {
     "node": ">=8.10"
-  },
-  "bugs": {
-    "url": "https://github.com/facebook/create-react-app/issues"
   },
   "files": [
     "bin",

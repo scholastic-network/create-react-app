@@ -1,6 +1,8 @@
 import {createBrowserHistory} from "history"
 
-export const history = createBrowserHistory()
+export const history = createBrowserHistory({
+    basename: process.env.PUBLIC_URL,
+})
 export type HistoryParamValue = string | undefined | null
 
 export const pushUrlHistoryParamFn = (history: any, paramName: string | Array<string>) => (

@@ -1,8 +1,11 @@
 import {rootReducer} from "./rootReducer"
 import {configureStore, getDefaultMiddleware} from "@reduxjs/toolkit"
-import {formErrorMiddleware} from "scholastic-client-components"
+import {formErrorMiddleware, loadAuthedStore} from "scholastic-client-components"
+
+const preloadedState = loadAuthedStore()
 
 export const store = configureStore({
+    preloadedState,
     reducer: rootReducer,
     middleware: [...getDefaultMiddleware(), formErrorMiddleware.middleware],
 })

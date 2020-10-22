@@ -11,9 +11,9 @@ WORKDIR /app/scholastic-client
 
 COPY scholastic-client/package.json ./package.json
 COPY scholastic-client/package-lock.json ./package-lock.json
-RUN npm install --only=production
+RUN yarn install --production
 COPY scholastic-client ./
-RUN npm run build
+RUN yarn build
 
 
 FROM alpine

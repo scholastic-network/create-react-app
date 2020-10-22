@@ -1,44 +1,61 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## yarn
 
-## Available Scripts
+Please use yarn to install new dependencies.
+DO NOT use npm, since it uses different .lock file, and some dependencies could be missed.
 
-In the project directory, you can run:
+## lodash
 
-### `yarn start`
+Do not install lodash, install the only method you need instead.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+For example:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+```
+yarn add lodash.intersection @types/lodash.intersection
+```
 
-### `yarn test`
+## moment.js
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Do not use moment.js, it's too heavy and mostly overkill for our projects.
+Consider using any other solution suggested by its developers.
+https://momentjs.com/docs/#/-project-status/
 
-### `yarn build`
+## Get started
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Environment
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. Настроить hosts (хост будет один на все порталы).
+Портал юзеров открыватся на school.tsn.com/users, авторизации - school.tsn.com/auth
+    ```
+    127.0.0.1 school.tsn.com
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Настроить .env (Порт и хост должны совпадать с hosts)
 
-### `yarn eject`
+    ```
+    PORT=3002
+    PUBLIC_URL=/users
+    WDS_SOCKET_PATH=/users/sockjs-node
+    WDS_SOCKET_HOST=school.tsn.com
+    WDS_SOCKET_PORT=3002
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. Настроить nginx (Порты должны совападать с .env)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    ```
+    location /auth {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_redirect off;
+    }
+    location /home {
+        proxy_pass http://127.0.0.1:3002;
+        proxy_redirect off;
+    }
+    location /users {
+        proxy_pass http://127.0.0.1:3002;
+        proxy_redirect off;
+    }
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### TODOs
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Follow TODOs. Fix all PortalTypes.

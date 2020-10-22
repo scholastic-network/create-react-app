@@ -10,7 +10,7 @@ import {
 import {useLocation} from "react-router-dom"
 import {useSelector} from "react-redux"
 import {useLogout} from "../../hooks/auth/useLogout"
-import {intersection} from "lodash"
+import intersection from "lodash.intersection"
 
 type AccessRestrictions = {
     Roles?: Array<Role>
@@ -26,9 +26,9 @@ export const PortalHeader: React.FC = () => {
     const availablePortals = personPortals?.filter((portal) => portal !== PersonPortal.Party)
 
     const location = useLocation()
-    const {logout} = useLogout()
+    const logout = useLogout()
 
-    const leftItems = [
+    const leftItems: Array<NavigationLinkProps & AccessRestrictions> = [
         {
             id: 0,
             text: "Link 1",
@@ -62,12 +62,16 @@ export const PortalHeader: React.FC = () => {
     return (
         <Header
             logoLink={{
-                logoImage: <img src={"/graphics/Logo.svg"} alt="" />,
+                logoImage: <img src={"graphics/Logo.svg"} alt="" />,
                 to: "/",
             }}
             leftItems={accessedLeftItems}
             userItems={accessedUserItems}
-            portalsMenu={{portals: availablePortals, currentPortal: PersonPortal.Scholastic}}
+            portalsMenu={{
+                portals: availablePortals,
+                currentPortal: PersonPortal.Users,
+                subRoutes: true,
+            }}
         />
     )
 }
