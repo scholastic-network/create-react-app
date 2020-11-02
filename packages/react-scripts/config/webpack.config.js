@@ -756,6 +756,7 @@ module.exports = function (webpackEnv) {
         eslintPath: require.resolve('eslint'),
         context: paths.appSrc,
         // ESLint class options
+        cache: true,
         cwd: paths.appPath,
         resolvePluginsRelativeTo: __dirname,
         baseConfig: {
