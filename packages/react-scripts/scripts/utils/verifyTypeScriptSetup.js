@@ -167,7 +167,7 @@ function verifyTypeScriptSetup() {
   };
 
   const formatDiagnosticHost = {
-    getCanonicalFileName: (fileName) => fileName,
+    getCanonicalFileName: fileName => fileName,
     getCurrentDirectory: ts.sys.getCurrentDirectory,
     getNewLine: () => os.EOL,
   };
@@ -191,14 +191,24 @@ function verifyTypeScriptSetup() {
     // Get TS to parse and resolve any "extends"
     // Calling this function also mutates the tsconfig above,
     // adding in "include" and "exclude", but the compilerOptions remain untouched
-    let result;
+    /*let result;
     parsedTsConfig = immer(readTsConfig, (config) => {
       result = ts.parseJsonConfigFileContent(
         config,
         ts.sys,
         path.dirname(paths.appTsConfig)
       );
-    });
+    });*/
+    // https://github.com/facebook/create-react-app/issues/9429#issuecomment-669615656
+    parsedTsConfig = { ...readTsConfig };
+
+    const result = ts.parseJsonConfigFileContent(
+      parsedTsConfig,
+      ts.sys,
+      path.dirname(paths.appTsConfig)
+    );
+
+    ///
 
     if (result.errors && result.errors.length) {
       throw new Error(
@@ -283,7 +293,7 @@ function verifyTypeScriptSetup() {
           'file:'
         )
       );
-      messages.forEach((message) => {
+      messages.forEach(message => {
         console.warn('  - ' + message);
       });
       console.warn();
