@@ -747,14 +747,20 @@ module.exports = function (webpackEnv) {
         }),
       new ESLintPlugin({
         // Plugin options
+        cache: true,
+        files: ['./src', './../scholastic-client-components/src'],
         extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
         formatter: require.resolve('react-dev-utils/eslintFormatter'),
         eslintPath: require.resolve('eslint'),
         context: paths.appSrc,
         // ESLint class options
-        cache: true,
         cwd: paths.appPath,
         resolvePluginsRelativeTo: __dirname,
+        lintDirtyModulesOnly: true,
+        fix: true,
+        useEslintrc: true,
+        failOnError: false,
+        failOnWarning: false,
         baseConfig: {
           extends: [require.resolve('eslint-config-react-app/base')],
           rules: {
