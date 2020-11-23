@@ -3,25 +3,32 @@ import ReactDOM from "react-dom"
 import {Route, Router} from "react-router-dom"
 import {history} from "./lib/routing"
 import {store} from "./store/store"
-import {Provider, useSelector} from "react-redux"
+import {Provider, useDispatch, useSelector} from "react-redux"
 import {
     configureAxios,
-    PortalType,
     setAxiosTokenHeader,
     authSelectors,
+    authSlice,
+    Portal,
 } from "scholastic-client-components"
 import {Notifications} from "./features/Notifications/Notifications"
 import {useLogout} from "./hooks/auth/useLogout"
 
+const App = require("./App").App
 const AppWrapper: React.FC = () => {
-    const App = require("./App").App
+    const dispatch = useDispatch()
 
     const logout = useLogout()
     const token = useSelector(authSelectors.getToken())
 
     useEffect(() => {
-        // TODO: Place suitable PortalType
-        configureAxios({store, history, portal: PortalType.Scholastic, logout})
+        // TODO: Change Portal
+        dispatch(authSlice.actions.updateAccessData({currentPortal: Portal.Portal}))
+    }, [dispatch])
+
+    useEffect(() => {
+        // TODO: Change Portal
+        configureAxios({store, history, portal: Portal.Portal, logout})
         setAxiosTokenHeader(token)
     }, [logout, token])
 

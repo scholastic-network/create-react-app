@@ -2,9 +2,11 @@ import React from "react"
 import {
     authSelectors,
     Page403,
-    Role,
     getAuthLoginRedirectPath,
     PageNoAccess,
+    ContainerLayout,
+    Loader,
+    Authority,
 } from "scholastic-client-components"
 import {Route} from "react-router-dom"
 import {RouteProps} from "react-router"
@@ -12,9 +14,9 @@ import {createSelector} from "@reduxjs/toolkit"
 import {useSelector} from "react-redux"
 import {useLogout} from "../hooks/auth/useLogout"
 
-const selectUserHasRoles = (roles?: Array<Role>) => {
+const selectUserHasAuthorities = (authorities?: Array<Authority>) => {
     return createSelector(
-        authSelectors.getUserHasRoles(roles),
+        authSelectors.getUserHasAuthorities(authorities),
         authSelectors.getToken(),
         authSelectors.getAccessAllowed(),
         (pageAccessAllowed, userToken, portalAccessAllowed) => ({
@@ -27,28 +29,33 @@ const selectUserHasRoles = (roles?: Array<Role>) => {
 
 interface PrivateRouteProps extends RouteProps {
     component: React.ComponentType<any>
-    roles?: Array<Role>
+    authorities?: Array<Authority>
 }
 
 export const PrivateRoute: React.FC<PrivateRouteProps> = ({
     component: Component,
-    roles,
+    authorities,
     ...rest
 }) => {
     const {pageAccessAllowed, portalAccessAllowed, isAuthenticated} = useSelector(
-        selectUserHasRoles(roles)
+        selectUserHasAuthorities(authorities)
     )
     const loginRedirectPath = getAuthLoginRedirectPath(
         window.location.pathname,
         window.location.search
     )
 
-    if (!isAuthenticated) {
-        window.location.replace(loginRedirectPath)
-    }
-
     const homeURL = useSelector(authSelectors.getHomePortalURL())
     const logout = useLogout()
+
+    if (!isAuthenticated) {
+        window.location.replace(loginRedirectPath)
+        return (
+            <ContainerLayout>
+                <Loader />
+            </ContainerLayout>
+        )
+    }
 
     return (
         <Route

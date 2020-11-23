@@ -50,14 +50,12 @@ export const useSearchParamsGroup: (
     (params: {[paramName: string]: HistoryParamValue}) => void
 ] = (...paramNames) => {
     const history = useHistory()
-    const {
-        location: {search},
-    } = history
+    const {location: search} = history
 
     const valuesInitial = paramNames.reduce((res, name) => ({...res, [name]: null}), {})
 
     const values = useMemo(() => {
-        const urlParams = new URLSearchParams(search)
+        const urlParams = new URLSearchParams(history.location.search)
         return paramNames.reduce(
             (values, paramName) => ({
                 ...values,
@@ -65,7 +63,7 @@ export const useSearchParamsGroup: (
             }),
             valuesInitial
         )
-    }, [search, paramNames, valuesInitial])
+    }, [paramNames, search, valuesInitial])
 
     return useMemo(() => {
         return [values, pushUrlHistoryParams(history)]

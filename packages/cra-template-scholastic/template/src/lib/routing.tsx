@@ -35,3 +35,15 @@ export const pushUrlHistoryParams = (history: any) => (params: {
     })
     history.push({...history.location, search: urlSearchParams.toString()})
 }
+
+export enum AppPaths {
+    Route_1 = "/route_1",
+}
+
+export enum ModalParams {
+    ModalId = "modal_id",
+}
+
+export const FORM = {
+    form: "FORM",
+}

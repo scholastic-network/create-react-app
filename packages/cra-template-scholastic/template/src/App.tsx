@@ -1,23 +1,13 @@
 import "./stylesheets/index.scss"
 import React, {Suspense, useEffect} from "react"
 import {PortalHeader} from "./features/PortalHeader/PortalHeader"
-import {
-    Loader,
-    Page403,
-    Page404,
-    ContainerLayout,
-    authSlice,
-    PersonPortal,
-} from "scholastic-client-components"
+import {Loader, Page403, Page404, ContainerLayout} from "scholastic-client-components"
 import {PrivateRoute} from "./lib/PrivateRoute"
 import {Route, Switch} from "react-router-dom"
-import {useDispatch} from "react-redux"
 import {ExamplePage} from "./pages/ExamplePage"
 import browserUpdate from "browser-update"
 
 export const App: React.FC = () => {
-    const dispatch = useDispatch()
-
     useEffect(() => {
         // http://localhost:3000/screens/#test-bu
         browserUpdate({
@@ -31,10 +21,6 @@ export const App: React.FC = () => {
         })
     }, [])
 
-    useEffect(() => {
-        dispatch(authSlice.actions.updateAccessData({currentPortal: PersonPortal.Users}))
-    }, [dispatch])
-
     return (
         <>
             <PortalHeader />
@@ -46,7 +32,7 @@ export const App: React.FC = () => {
                 }
             >
                 <Switch>
-                    <PrivateRoute path={"/"} component={ExamplePage} roles={[]} exact />
+                    <PrivateRoute path={"/"} component={ExamplePage} authorities={[]} exact />
                     <Route path={"/403"} component={Page403} />
                     <Route component={Page404} />
                 </Switch>

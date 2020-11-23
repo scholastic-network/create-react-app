@@ -4,26 +4,29 @@ import {
     Header,
     HeaderPopupItemProps,
     NavigationLinkProps,
-    PersonPortal,
-    Role,
+    Authority,
+    Portal,
 } from "scholastic-client-components"
 import {useLocation} from "react-router-dom"
 import {useSelector} from "react-redux"
 import {useLogout} from "../../hooks/auth/useLogout"
 import intersection from "lodash.intersection"
 
-type AccessRestrictions = {
-    Roles?: Array<Role>
+export type AccessRestrictions = {
+    authorities?: Array<Authority>
 }
 
 export const PortalHeader: React.FC = () => {
-    const userRoles = useSelector(authSelectors.getRoles())
+    const userAuthorities = useSelector(authSelectors.getAuthorities())
     const filterAccessibleOnly = (items: Array<AccessRestrictions>) =>
-        items.filter((item) => (item.Roles ? !!intersection(userRoles, item.Roles).length : true))
+        items.filter((item) =>
+            item.authorities ? !!intersection(userAuthorities, item.authorities).length : true
+        )
 
     const authId = useSelector(authSelectors.getAuthedUserId())
     const personPortals = useSelector(authSelectors.getPortals())
-    const availablePortals = personPortals?.filter((portal) => portal !== PersonPortal.Party)
+    // TODO: Change Portal
+    const availablePortals = personPortals?.filter((portal) => portal !== Portal.Portal)
 
     const location = useLocation()
     const logout = useLogout()
@@ -58,7 +61,7 @@ export const PortalHeader: React.FC = () => {
     const accessedLeftItems = filterAccessibleOnly(leftItems) as Array<NavigationLinkProps>
     const accessedUserItems = filterAccessibleOnly(userItems) as Array<HeaderPopupItemProps>
 
-    // TODO: Put suitable currentPortal value
+    // TODO: Change Portal
     return (
         <Header
             logoLink={{
@@ -69,7 +72,7 @@ export const PortalHeader: React.FC = () => {
             userItems={accessedUserItems}
             portalsMenu={{
                 portals: availablePortals,
-                currentPortal: PersonPortal.Users,
+                currentPortal: Portal.Portal,
                 subRoutes: true,
             }}
         />
