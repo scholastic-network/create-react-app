@@ -789,13 +789,15 @@ module.exports = function (webpackEnv) {
         // add errors to webpack instead of warnings
         failOnError: true,
       }),
-      new BundleAnalyzerPlugin({analyzerMode:'static', openAnalyzer: false}),
-      new DuplicatesPlugin({
-        // Emit compilation warning or error? (Default: `false`)
-        emitErrors: false,
-        // Display full duplicates information? (Default: `false`)
-        verbose: true,
-      }),
+      isEnvProduction&&
+        new BundleAnalyzerPlugin({analyzerMode:'static', openAnalyzer: false}),
+      isEnvProduction&&
+        new DuplicatesPlugin({
+          // Emit compilation warning or error? (Default: `false`)
+          emitErrors: false,
+          // Display full duplicates information? (Default: `false`)
+          verbose: true
+        }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
