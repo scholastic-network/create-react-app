@@ -15,7 +15,9 @@
       "react-router-dom": "^5.2.0",
       "redux": "^4.0.5",
       "redux-form": "^8.3.6",
-      "browser-update": "^3.3.22"
+      "browser-update": "^3.3.22",
+      "inspectpack": "^4.5.2",
+      "webpack-bundle-analyzer": "^4.2.0",
     }
   }
 }
