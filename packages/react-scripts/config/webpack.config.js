@@ -85,8 +85,9 @@ const hasJsxRuntime = (() => {
   }
 })();
 
-/*const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin*/
-/*const { DuplicatesPlugin } = require('inspectpack/plugin');*/
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const {DuplicatesPlugin} = require('inspectpack/plugin');
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -788,13 +789,13 @@ module.exports = function (webpackEnv) {
         // add errors to webpack instead of warnings
         failOnError: true,
       }),
-      /*new BundleAnalyzerPlugin({analyzerMode:'static'}),*/
-      /*new DuplicatesPlugin({
+      new BundleAnalyzerPlugin({analyzerMode:'static', openAnalyzer: false}),
+      new DuplicatesPlugin({
         // Emit compilation warning or error? (Default: `false`)
         emitErrors: false,
         // Display full duplicates information? (Default: `false`)
         verbose: true,
-      }),*/
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
