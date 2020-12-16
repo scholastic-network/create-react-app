@@ -6,37 +6,35 @@ import {store} from "./store/store"
 import {Provider, useDispatch, useSelector} from "react-redux"
 import {
     configureAxios,
-    setAxiosTokenHeader,
     authSelectors,
-    authSlice,
     Portal,
+    AuthWrap,
+    useAuth,
 } from "scholastic-client-components"
 import {Notifications} from "./features/Notifications/Notifications"
 import {useLogout} from "./hooks/auth/useLogout"
+import {authAPI} from "./api/connectedAPI"
 
 const App = require("./App").App
 const AppWrapper: React.FC = () => {
     const dispatch = useDispatch()
 
     const logout = useLogout()
-    const token = useSelector(authSelectors.getToken())
+    const accessAllowed = useSelector(authSelectors.getAccessAllowed())
 
     useEffect(() => {
         // TODO: Change Portal
-        dispatch(authSlice.actions.updateAccessData({currentPortal: Portal.Portal}))
-    }, [dispatch])
+        configureAxios({store, history, portal: Portal.UNKNOWN, logout})
+    }, [logout])
 
-    useEffect(() => {
-        // TODO: Change Portal
-        configureAxios({store, history, portal: Portal.Portal, logout})
-        setAxiosTokenHeader(token)
-    }, [logout, token])
+    // TODO: Change Portal
+    const auth = useAuth(Portal.UNKNOWN, dispatch, useSelector, authAPI)
 
     return (
-        <>
-            <Route path="/" component={App} />
+        <AuthWrap {...auth}>
+            {accessAllowed !== undefined && <Route path="/" component={App} />}
             <Notifications />
-        </>
+        </AuthWrap>
     )
 }
 
