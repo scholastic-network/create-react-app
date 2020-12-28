@@ -17,7 +17,7 @@
       "redux-form": "^8.3.6",
       "browser-update": "^3.3.22",
       "inspectpack": "^4.5.2",
-      "webpack-bundle-analyzer": "^4.2.0",
+      "webpack-bundle-analyzer": "^4.2.0"
     }
   }
 }
