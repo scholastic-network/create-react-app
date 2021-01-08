@@ -11,6 +11,8 @@ import {useLocation} from "react-router-dom"
 import {useSelector} from "react-redux"
 import {useLogout} from "../../hooks/auth/useLogout"
 import intersection from "lodash.intersection"
+import {ModalParams} from "../../lib/routing"
+import {useSearchParams} from "../../hooks/search/useSearchParams"
 
 export type AccessRestrictions = {
     authorities?: Array<Authority>
@@ -41,8 +43,10 @@ export const PortalHeader: React.FC = () => {
     ]
 
     const handleProfileClick = () => {
-        // TODO: Open profile edit modal
-        console.log("Profile: " + authId)
+        const {
+            location: {origin},
+        } = window
+        window.open(`${origin}/users/profile?view_user=${authId}`, "_blank")
     }
 
     const userItems: Array<HeaderPopupItemProps & AccessRestrictions> = [
@@ -58,6 +62,18 @@ export const PortalHeader: React.FC = () => {
         },
     ]
 
+    const {
+        [ModalParams.Support]: {setValue: setSupport},
+    } = useSearchParams(ModalParams.Support)
+
+    const supportItems = [
+        {
+            id: 0,
+            text: "Submit support request",
+            onClick: () => setSupport("create"),
+        },
+    ]
+
     const accessedLeftItems = filterAccessibleOnly(leftItems) as Array<NavigationLinkProps>
     const accessedUserItems = filterAccessibleOnly(userItems) as Array<HeaderPopupItemProps>
 
@@ -70,6 +86,7 @@ export const PortalHeader: React.FC = () => {
             }}
             leftItems={accessedLeftItems}
             userItems={accessedUserItems}
+            supportItems={supportItems}
             portalsMenu={{
                 portals: availablePortals,
                 currentPortal: Portal.Portal,

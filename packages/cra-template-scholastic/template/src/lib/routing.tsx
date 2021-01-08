@@ -42,6 +42,7 @@ export enum AppPaths {
 
 export enum ModalParams {
     ModalId = "modal_id",
+    Support = "support",
 }
 
 export const FORM = {
