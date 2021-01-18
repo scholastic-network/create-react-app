@@ -1,25 +1,5 @@
-## yarn
-
-Please use yarn to install new dependencies.
-DO NOT use npm, since it uses different .lock file, and some dependencies could be missed.
-
-## lodash
-
-Do not install lodash, install the only method you need instead.
-
-For example:
-
-```
-yarn add lodash.intersection @types/lodash.intersection
-```
-
-## moment.js
-
-Do not use moment.js, it's too heavy and mostly overkill for our projects.
-Consider using any other solution suggested by its developers.
-https://momentjs.com/docs/#/-project-status/
-
-## Get started
+### Docs
+https://scholasticnetwork.atlassian.net/wiki/spaces/SN/pages/551485446/Frontend
 
 ### Environment
 
