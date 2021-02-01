@@ -37,7 +37,7 @@ export const pushUrlHistoryParams = (history: any) => (params: {
 }
 
 export enum AppPaths {
-    Route_1 = "/route_1",
+    Example = "/",
 }
 
 export enum ModalParams {
@@ -45,6 +45,6 @@ export enum ModalParams {
     Support = "support",
 }
 
-export const FORM = {
-    form: "FORM",
+export enum Form {
+    form = "form",
 }

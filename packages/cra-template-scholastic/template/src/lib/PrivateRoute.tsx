@@ -1,18 +1,9 @@
 import React from "react"
-import {
-    authSelectors,
-    Page403,
-    getAuthLoginRedirectPath,
-    PageNoAccess,
-    ContainerLayout,
-    Loader,
-    Authority,
-} from "scholastic-client-components"
-import {Route} from "react-router-dom"
+import {authSelectors, Page403, Authority} from "scholastic-client-components"
+import {Redirect, Route} from "react-router-dom"
 import {RouteProps} from "react-router"
 import {createSelector} from "@reduxjs/toolkit"
 import {useSelector} from "react-redux"
-import {useLogout} from "../hooks/auth/useLogout"
 
 const selectUserHasAuthorities = (authorities?: Array<Authority>) => {
     return createSelector(
@@ -37,32 +28,16 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({
     authorities,
     ...rest
 }) => {
-    const {pageAccessAllowed, portalAccessAllowed, isAuthenticated} = useSelector(
+    const {pageAccessAllowed, portalAccessAllowed} = useSelector(
         selectUserHasAuthorities(authorities)
     )
-    const loginRedirectPath = getAuthLoginRedirectPath(
-        window.location.pathname,
-        window.location.search
-    )
-
-    const homeURL = useSelector(authSelectors.getHomePortalURL())
-    const logout = useLogout()
-
-    if (!isAuthenticated) {
-        window.location.replace(loginRedirectPath)
-        return (
-            <ContainerLayout>
-                <Loader />
-            </ContainerLayout>
-        )
-    }
 
     return (
         <Route
             {...rest}
             render={(props) =>
                 !portalAccessAllowed ? (
-                    <PageNoAccess onLoginProposalClick={logout} homeURL={homeURL} />
+                    <Redirect to={"/no_access"} />
                 ) : !pageAccessAllowed ? (
                     <Page403 />
                 ) : (
