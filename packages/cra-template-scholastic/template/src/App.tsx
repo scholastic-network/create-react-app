@@ -12,13 +12,14 @@ import {
 } from "scholastic-client-components"
 import {useSelector, useDispatch} from "react-redux"
 import {PrivateRoute} from "./lib/PrivateRoute"
-import {Route, Switch} from "react-router-dom"
+import {Redirect, Route, Switch} from "react-router-dom"
 import {ExamplePage} from "./pages/ExamplePage"
 import browserUpdate from "browser-update"
 import {AppPaths, ModalParams} from "./lib/routing"
 import {useSearchParams} from "./hooks/search/useSearchParams"
 import {useLogout} from "./hooks/auth/useLogout"
-import {routesAccessRestrictions} from "./access/routesAccessRestrictions";
+import {routesAccessRestrictions} from "./access/routesAccessRestrictions"
+import intersection from "lodash.intersection"
 
 export const App: React.FC = () => {
     useEffect(() => {
@@ -52,6 +53,7 @@ export const App: React.FC = () => {
                 }
             >
                 <Switch>
+                    <PrivateRoute path={"/"} component={DefaultPage} authorities={[]} exact />
                     <PrivateRoute
                         path={AppPaths.Example}
                         component={ExamplePage}
@@ -73,4 +75,12 @@ export const App: React.FC = () => {
             </Suspense>
         </>
     )
+}
+
+const DefaultPage: React.FC = () => {
+    const userAuthorities = useSelector(authSelectors.getAuthorities())
+    const defaultRoute = Object.entries(routesAccessRestrictions).find(
+        ([_, authorities]) => intersection(userAuthorities, authorities).length
+    )
+    return <Redirect to={defaultRoute?.[0] || "/403"} />
 }
