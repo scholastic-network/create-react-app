@@ -10,10 +10,12 @@ import {
     Portal,
     AuthWrap,
     useAuth,
+    UserGuide,
 } from "scholastic-client-components"
 import {Notifications} from "./features/Notifications/Notifications"
 import {useLogout} from "./hooks/auth/useLogout"
 import {authAPI} from "./api/connectedAPI"
+import {useSelectedPortalTab} from "./hooks/useSelectedPortalTab"
 
 const App = require("./App").App
 const AppWrapper: React.FC = () => {
@@ -29,11 +31,18 @@ const AppWrapper: React.FC = () => {
 
     // TODO: Change Portal
     const auth = useAuth(Portal.UNKNOWN, dispatch, useSelector, authAPI)
+    const selectedTab = useSelectedPortalTab()
 
     return (
         <AuthWrap {...auth}>
             {accessAllowed !== undefined && <Route path="/" component={App} />}
             <Notifications />
+            <UserGuide
+                tab={selectedTab}
+                useSelector={useSelector}
+                dispatch={dispatch}
+                portal={Portal.Admin}
+            />
         </AuthWrap>
     )
 }
