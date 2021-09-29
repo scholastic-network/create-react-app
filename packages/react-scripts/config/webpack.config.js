@@ -775,7 +775,7 @@ module.exports = function (webpackEnv) {
         lintDirtyModulesOnly: true,
         fix: true,
         useEslintrc: true,
-        failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
+        failOnError: false,
         failOnWarning: false,
         baseConfig: {
           extends: [require.resolve('eslint-config-react-app/base')],
