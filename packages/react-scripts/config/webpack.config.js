@@ -758,22 +758,33 @@ module.exports = function (webpackEnv) {
       }),
       !disableESLintPlugin &&
       new ESLintPlugin({
-            cache: false,
-            formatter: require.resolve("react-dev-utils/eslintFormatter"),
-            eslintPath: require.resolve("eslint"),
-            resolvePluginsRelativeTo: __dirname,
-            files: ["./src", "./../scholastic-client-components/src"],
-            extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-            fix: true,
-            useEslintrc: true,
-
-            failOnError: true,
-            failOnWarning: false,
-            emitError: true,
-            emitWarning: false,
-
-            quiet: true,
-            //lintDirtyModulesOnly: true,
+             // Plugin options
+        files: ['./src', './../scholastic-client-components/src'],
+        extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
+        formatter: require.resolve('react-dev-utils/eslintFormatter'),
+        eslintPath: require.resolve('eslint'),
+        context: paths.appSrc,
+        cache: true,
+        cacheLocation: path.resolve(
+          paths.appNodeModules,
+          '.cache/.eslintcache'
+        ),
+        // ESLint class options
+        cwd: paths.appPath,
+        resolvePluginsRelativeTo: __dirname,
+        lintDirtyModulesOnly: true,
+        fix: true,
+        useEslintrc: true,
+        failOnError: false,
+        failOnWarning: false,
+        baseConfig: {
+          extends: [require.resolve('eslint-config-react-app/base')],
+          rules: {
+            ...(!hasJsxRuntime && {
+              'react/react-in-jsx-scope': 'error',
+            }),
+          },
+        },
       }),
       new CircularDependencyPlugin({
         // exclude detection of files based on a RegExp
