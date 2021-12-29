@@ -589,11 +589,18 @@ module.exports = function (webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/, /\.svg$/],
               options: {
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
-            },
+                name: 'static/media/[name].[hash:6].[ext]',
+              }
+			    },
+			    {
+                loader: require.resolve('file-loader'),
+                test: /\.svg$/,
+			          options: {
+                name: 'static/media/[name].icon.[ext]',
+				 },
+            }
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
           ],
