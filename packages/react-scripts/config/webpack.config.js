@@ -584,7 +584,7 @@ module.exports = function (webpackEnv) {
               options: {
                 name: (resourcePath) => {
                   if (resourcePath.endsWith(".svg")) {
-                    const splitted = resourcePath.split("\\")
+                    const splitted = resourcePath.includes("\\") ? resourcePath.split("\\") : resourcePath.split("/")
                     const prevLast = splitted[splitted.length - 2]
                     const prefix = prevLast === "graphics" ? "" : prevLast
 					if (prefix) return `static/media/${prefix}_[name].icon.[ext]`
