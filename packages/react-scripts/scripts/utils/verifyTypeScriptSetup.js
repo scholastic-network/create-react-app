@@ -122,7 +122,7 @@ function verifyTypeScriptSetup() {
       suggested: 'es5',
     },
     lib: { suggested: ['dom', 'dom.iterable', 'esnext'] },
-    allowJs: { suggested: true },
+    allowJs: { value: false },
     skipLibCheck: { suggested: true },
     esModuleInterop: { suggested: true },
     allowSyntheticDefaultImports: { suggested: true },
@@ -144,7 +144,7 @@ function verifyTypeScriptSetup() {
     },
     resolveJsonModule: { value: true, reason: 'to match webpack loader' },
     isolatedModules: { value: true, reason: 'implementation limitation' },
-    noEmit: { value: true },
+    noEmit: { value: false },
     jsx: {
       parsedValue:
         hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
