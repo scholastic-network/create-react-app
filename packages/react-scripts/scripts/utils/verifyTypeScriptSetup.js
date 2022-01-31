@@ -150,11 +150,9 @@ function verifyTypeScriptSetup() {
         hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
           ? ts.JsxEmit.ReactJSX
           : ts.JsxEmit.React,
-      value:
-        hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
-          ? 'react-jsx'
-          : 'react',
-      reason: 'to support the new JSX transform in React 17',
+      value: "react",
+        // if hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta') then react-jsx
+      reason: 'React-jsx is needed to support the new JSX transform in React 17. So fart, using React 16.x',
     },
     baseUrl: { suggested: '.' },
     paths: {
