@@ -35,6 +35,7 @@ const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 // @remove-on-eject-begin
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
@@ -327,7 +328,7 @@ module.exports = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(
+      modules: ['node_modules', paths.appNodeModules, paths.workspaceRootNodeModules].concat(
         modules.additionalModulePaths || []
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
@@ -349,10 +350,8 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
-        react: path.resolve('./node_modules/react'),
-        'react-router-dom': path.resolve('./node_modules/react-router-dom'),
-        'scholastic-client-components': path.resolve(
-          '../scholastic-client-components/index.ts'
+        "scholastic-client-components": path.resolve(
+            "../scholastic-client-components/index.ts"
         ),
       },
       plugins: [
@@ -452,6 +451,7 @@ module.exports = function (webpackEnv) {
                       },
                     },
                   ],
+                    "lodash",
                   isEnvDevelopment &&
                   shouldUseReactRefresh &&
                   require.resolve('react-refresh/babel'),
@@ -587,7 +587,7 @@ module.exports = function (webpackEnv) {
                     const splitted = resourcePath.includes("\\") ? resourcePath.split("\\") : resourcePath.split("/")
                     const prevLast = splitted[splitted.length - 2]
                     const prefix = prevLast === "graphics" ? "" : prevLast
-					if (prefix) return `static/media/${prefix}_[name].icon.[ext]`
+					if (prefix) {return `static/media/${prefix}_[name].icon.[ext]`}
 					return "static/media/[name].icon.[ext]"
                    
                   }
@@ -707,12 +707,16 @@ module.exports = function (webpackEnv) {
           };
         },
       }),
+      new LodashModuleReplacementPlugin({
+        shorthands: true
+      }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      /*new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, "en-gb.js"),*/
       // Generate a service worker script that will precache, and keep up to date,
       // the HTML & assets that are part of the webpack build.
       isEnvProduction &&
@@ -794,7 +798,7 @@ module.exports = function (webpackEnv) {
         failOnError: true,
       }),
       isEnvProduction &&
-      new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
+      new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: true }),
       isEnvProduction &&
       new DuplicatesPlugin({
         // Emit compilation warning or error? (Default: `false`)

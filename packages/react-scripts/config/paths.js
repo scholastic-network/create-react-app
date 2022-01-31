@@ -98,8 +98,9 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
+  workspaceRootNodeModules: resolveApp('./../../node_modules'),
   lib: resolveApp(`./../scholastic-client-components`),
-  libNodeModules: resolveApp(`./../scholastic-client-components/nodeModules`),
+  libNodeModules: resolveApp(`./../scholastic-client-components/node_modules`),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   // These properties only exist before ejecting:
