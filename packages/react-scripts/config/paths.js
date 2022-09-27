@@ -77,6 +77,7 @@ module.exports = {
   appWebpackCache: resolveApp('node_modules/.cache'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
+  lib: resolveApp(`./../scholastic-client-components`),
   publicUrlOrPath,
 };
 
@@ -101,6 +102,8 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   appWebpackCache: resolveApp('node_modules/.cache'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
+  lib: resolveApp(`./../scholastic-client-components`),
+  libNodeModules: resolveApp(`./../scholastic-client-components/nodeModules`),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   // These properties only exist before ejecting:
@@ -139,6 +142,7 @@ if (
     appNodeModules: resolveOwn('node_modules'),
     appWebpackCache: resolveOwn('node_modules/.cache'),
     appTsBuildInfoFile: resolveOwn('node_modules/.cache/tsconfig.tsbuildinfo'),
+    lib: resolveOwn(`../scholastic-client-components`),
     swSrc: resolveModule(resolveOwn, `${templatePath}/src/service-worker`),
     publicUrlOrPath,
     // These properties only exist before ejecting:

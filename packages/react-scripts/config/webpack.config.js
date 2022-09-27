@@ -327,6 +327,11 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+        react: path.resolve('./node_modules/react'),
+        'react-router-dom': path.resolve('./node_modules/react-router-dom'),
+        'scholastic-client-components': path.resolve(
+          '../scholastic-client-components/index.ts'
+        ),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -334,15 +339,16 @@ module.exports = function (webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(paths.appSrc, [
+       /* new ModuleScopePlugin(paths.appSrc, [
           paths.appPackageJson,
           reactRefreshRuntimeEntry,
           reactRefreshWebpackPluginRuntimeEntry,
           babelRuntimeEntry,
           babelRuntimeEntryHelpers,
           babelRuntimeRegenerator,
-        ]),
+        ]),*/
       ],
+      fallback: { "util": require.resolve("util/") }
     },
     module: {
       strictExportPresence: true,
@@ -413,7 +419,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: [paths.appSrc, paths.lib],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -764,10 +770,10 @@ module.exports = function (webpackEnv) {
       !disableESLintPlugin &&
         new ESLintPlugin({
           // Plugin options
+          files: ['./src', './../scholastic-client-components/src'],
           extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
           formatter: require.resolve('react-dev-utils/eslintFormatter'),
           eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
           context: paths.appSrc,
           cache: true,
           cacheLocation: path.resolve(
@@ -777,6 +783,11 @@ module.exports = function (webpackEnv) {
           // ESLint class options
           cwd: paths.appPath,
           resolvePluginsRelativeTo: __dirname,
+          /*failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),*/
+          fix: true,
+          useEslintrc: true,
+          failOnError: false,
+          failOnWarning: false,
           baseConfig: {
             extends: [require.resolve('eslint-config-react-app/base')],
             rules: {
@@ -786,6 +797,12 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      /*new CircularDependencyPlugin({
+        // exclude detection of files based on a RegExp
+        exclude: /node_modules/,
+        // add errors to webpack instead of warnings
+        failOnError: true,
+      }),*/
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
