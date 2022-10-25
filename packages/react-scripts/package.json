@@ -28,6 +28,8 @@
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {
+    "@principalstudio/html-webpack-inject-preload": "^1.2.7",
+
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
@@ -37,7 +39,6 @@
     "@types/webpack-env": "^1.18.0",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
-    "@vue/preload-webpack-plugin": "^2.0.0",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.8",
