@@ -39,6 +39,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -636,6 +637,17 @@ module.exports = function (webpackEnv) {
               }
             : undefined
         )
+      ),
+      new PreloadWebpackPlugin(
+        {
+          as(entry) {
+            if (/\.(?!(svg$|png$|jpe?g$)).*$/.test(entry)) {
+              return 'image';
+            }
+          },
+          fileBlacklist: [/\.(?!(svg$|png$|jpe?g$)).*$/],
+          include: "all"
+        }
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
