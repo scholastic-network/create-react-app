@@ -1,0 +1,16 @@
+@use "./../scholastic-client-components/src/stylesheets/index";
+@import "fonts";
+@import "browser-update";
+@import "root";
+
+html {
+    font-size: 16px;
+    margin-top: 0 !important;
+    body {
+        overflow-y: unset;
+    }
+}
+
+h1 {
+    margin: 0;
+}

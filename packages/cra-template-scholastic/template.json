@@ -1,0 +1,23 @@
+{
+  "package": {
+    "dependencies": {
+      "@babel/preset-typescript": "^7.10.4",
+      "@reduxjs/toolkit": "^1.4.0",
+      "@types/classnames": "^2.2.10",
+      "@types/react-redux": "^7.1.9",
+      "@types/react-router-dom": "^5.1.5",
+      "@types/redux-form": "^8.3.0",
+      "@types/lodash.intersection": "^4.4.6",
+      "axios": "^0.19.2",
+      "classnames": "^2.2.6",
+      "lodash.intersection": "^4.4.0",
+      "react-redux": "^7.2.1",
+      "react-router-dom": "^5.2.0",
+      "redux": "^4.0.5",
+      "redux-form": "^8.3.6",
+      "browser-update": "^3.3.22",
+      "inspectpack": "^4.5.2",
+      "webpack-bundle-analyzer": "^4.2.0"
+    }
+  }
+}

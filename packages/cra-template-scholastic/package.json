@@ -1,0 +1,18 @@
+{
+  "name": "cra-template-scholastic",
+  "version": "4.0.0",
+  "main": "template.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scholastic-network/create-react-app.git",
+    "directory": "packages/cra-template-typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.10"
+  },
+  "files": [
+    "template",
+    "template.json"
+  ]
+}
