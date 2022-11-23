@@ -817,10 +817,10 @@ module.exports = function(webpackEnv) {
         // add errors to webpack instead of warnings
         failOnError: true
       }),
-      new BundleAnalyzerPlugin({
+      /*new BundleAnalyzerPlugin({
         analyzerMode: 'disabled',
         generateStatsFile: true
-      })
+      })*/
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
