@@ -37,6 +37,9 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HtmlWebpackInjectPreload = require('@principalstudio/html-webpack-inject-preload');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -97,7 +100,7 @@ const hasJsxRuntime = (() => {
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function (webpackEnv) {
+module.exports = function(webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -124,11 +127,11 @@ module.exports = function (webpackEnv) {
         // in production `paths.publicUrlOrPath` can be a relative path
         options: paths.publicUrlOrPath.startsWith('.')
           ? { publicPath: '../../' }
-          : {},
+          : {}
       },
       {
         loader: require.resolve('css-loader'),
-        options: cssOptions,
+        options: cssOptions
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -143,38 +146,38 @@ module.exports = function (webpackEnv) {
             config: false,
             plugins: !useTailwind
               ? [
-                  'postcss-flexbugs-fixes',
-                  [
-                    'postcss-preset-env',
-                    {
-                      autoprefixer: {
-                        flexbox: 'no-2009',
-                      },
-                      stage: 3,
+                'postcss-flexbugs-fixes',
+                [
+                  'postcss-preset-env',
+                  {
+                    autoprefixer: {
+                      flexbox: 'no-2009'
                     },
-                  ],
-                  // Adds PostCSS Normalize as the reset css with default options,
-                  // so that it honors browserslist config in package.json
-                  // which in turn let's users customize the target behavior as per their needs.
-                  'postcss-normalize',
-                ]
-              : [
-                  'tailwindcss',
-                  'postcss-flexbugs-fixes',
-                  [
-                    'postcss-preset-env',
-                    {
-                      autoprefixer: {
-                        flexbox: 'no-2009',
-                      },
-                      stage: 3,
-                    },
-                  ],
+                    stage: 3
+                  }
                 ],
+                // Adds PostCSS Normalize as the reset css with default options,
+                // so that it honors browserslist config in package.json
+                // which in turn let's users customize the target behavior as per their needs.
+                'postcss-normalize'
+              ]
+              : [
+                'tailwindcss',
+                'postcss-flexbugs-fixes',
+                [
+                  'postcss-preset-env',
+                  {
+                    autoprefixer: {
+                      flexbox: 'no-2009'
+                    },
+                    stage: 3
+                  }
+                ]
+              ]
           },
-          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-        },
-      },
+          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment
+        }
+      }
     ].filter(Boolean);
     if (preProcessor) {
       loaders.push(
@@ -182,14 +185,14 @@ module.exports = function (webpackEnv) {
           loader: require.resolve('resolve-url-loader'),
           options: {
             sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-            root: paths.appSrc,
-          },
+            root: paths.appSrc
+          }
         },
         {
           loader: require.resolve(preProcessor),
           options: {
-            sourceMap: true,
-          },
+            sourceMap: true
+          }
         }
       );
     }
@@ -231,11 +234,11 @@ module.exports = function (webpackEnv) {
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? info =>
-            path
-              .relative(paths.appSrc, info.absoluteResourcePath)
-              .replace(/\\/g, '/')
+          path
+            .relative(paths.appSrc, info.absoluteResourcePath)
+            .replace(/\\/g, '/')
         : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+        (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'))
     },
     cache: {
       type: 'filesystem',
@@ -247,11 +250,11 @@ module.exports = function (webpackEnv) {
         config: [__filename],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter(f =>
           fs.existsSync(f)
-        ),
-      },
+        )
+      }
     },
     infrastructureLogging: {
-      level: 'none',
+      level: 'none'
     },
     optimization: {
       minimize: isEnvProduction,
@@ -265,7 +268,7 @@ module.exports = function (webpackEnv) {
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
+              ecma: 8
             },
             compress: {
               ecma: 5,
@@ -279,10 +282,10 @@ module.exports = function (webpackEnv) {
               // https://github.com/facebook/create-react-app/issues/5250
               // Pending further investigation:
               // https://github.com/terser-js/terser/issues/120
-              inline: 2,
+              inline: 2
             },
             mangle: {
-              safari10: true,
+              safari10: true
             },
             // Added for profiling in devtools
             keep_classnames: isEnvProductionProfile,
@@ -292,13 +295,13 @@ module.exports = function (webpackEnv) {
               comments: false,
               // Turned on because emoji and regex is not minified properly using default
               // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
-          },
+              ascii_only: true
+            }
+          }
         }),
         // This is only used in production mode
-        new CssMinimizerPlugin(),
-      ],
+        new CssMinimizerPlugin()
+      ]
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -326,11 +329,7 @@ module.exports = function (webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
-        ...(modules.webpackAliases || {}),
-        ...(isEnvDevelopment ? {
-          react: path.resolve('./node_modules/react'),
-          'react-router-dom': path.resolve('./node_modules/react-router-dom'),
-        } : {})
+        ...(modules.webpackAliases || {})
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -338,16 +337,16 @@ module.exports = function (webpackEnv) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-       /* new ModuleScopePlugin(paths.appSrc, [
-          paths.appPackageJson,
-          reactRefreshRuntimeEntry,
-          reactRefreshWebpackPluginRuntimeEntry,
-          babelRuntimeEntry,
-          babelRuntimeEntryHelpers,
-          babelRuntimeRegenerator,
-        ]),*/
+        /* new ModuleScopePlugin(paths.appSrc, [
+           paths.appPackageJson,
+           reactRefreshRuntimeEntry,
+           reactRefreshWebpackPluginRuntimeEntry,
+           babelRuntimeEntry,
+           babelRuntimeEntryHelpers,
+           babelRuntimeRegenerator,
+         ]),*/
       ],
-      fallback: { "util": require.resolve("util/") }
+      fallback: { 'util': require.resolve('util/') }
     },
     module: {
       strictExportPresence: true,
@@ -357,7 +356,7 @@ module.exports = function (webpackEnv) {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
-          loader: require.resolve('source-map-loader'),
+          loader: require.resolve('source-map-loader')
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -372,9 +371,9 @@ module.exports = function (webpackEnv) {
               mimetype: 'image/avif',
               parser: {
                 dataUrlCondition: {
-                  maxSize: imageInlineSizeLimit,
-                },
-              },
+                  maxSize: imageInlineSizeLimit
+                }
+              }
             },
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
@@ -384,9 +383,9 @@ module.exports = function (webpackEnv) {
               type: 'asset',
               parser: {
                 dataUrlCondition: {
-                  maxSize: imageInlineSizeLimit,
-                },
-              },
+                  maxSize: imageInlineSizeLimit
+                }
+              }
             },
             {
               test: /\.svg$/,
@@ -398,22 +397,23 @@ module.exports = function (webpackEnv) {
                     prettier: false,
                     svgo: false,
                     svgoConfig: {
-                      plugins: [{ removeViewBox: false }],
+                      plugins: [{ removeViewBox: false }]
                     },
                     titleProp: true,
                     ref: true,
-                  },
+                    ext: 'svg'
+                  }
                 },
                 {
                   loader: require.resolve('file-loader'),
                   options: {
-                    name: 'static/media/[name].[hash].[ext]',
-                  },
-                },
+                    name: 'static/media/[name].[hash].[ext]'
+                  }
+                }
               ],
               issuer: {
-                and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
-              },
+                and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
+              }
             },
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
@@ -429,9 +429,9 @@ module.exports = function (webpackEnv) {
                   [
                     require.resolve('babel-preset-react-app'),
                     {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
-                    },
-                  ],
+                      runtime: hasJsxRuntime ? 'automatic' : 'classic'
+                    }
+                  ]
                 ],
                 // @remove-on-eject-begin
                 babelrc: false,
@@ -449,14 +449,14 @@ module.exports = function (webpackEnv) {
                     'babel-plugin-named-asset-import',
                     'babel-preset-react-app',
                     'react-dev-utils',
-                    'react-scripts',
+                    'react-scripts'
                   ]
                 ),
                 // @remove-on-eject-end
                 plugins: [
                   isEnvDevelopment &&
-                    shouldUseReactRefresh &&
-                    require.resolve('react-refresh/babel'),
+                  shouldUseReactRefresh &&
+                  require.resolve('react-refresh/babel')
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -464,8 +464,8 @@ module.exports = function (webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                compact: isEnvProduction,
-              },
+                compact: isEnvProduction
+              }
             },
             // Process any JS outside of the app with Babel.
             // Unlike the application JS, we only compile the standard ES features.
@@ -480,8 +480,8 @@ module.exports = function (webpackEnv) {
                 presets: [
                   [
                     require.resolve('babel-preset-react-app/dependencies'),
-                    { helpers: true },
-                  ],
+                    { helpers: true }
+                  ]
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
@@ -615,25 +615,34 @@ module.exports = function (webpackEnv) {
           {
             inject: true,
             template: paths.appHtml,
+            preload: ['media/*.svg']
           },
           isEnvProduction
             ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true
               }
+            }
             : undefined
         )
       ),
+      new HtmlWebpackInjectPreload({
+        files: [
+          {
+            match: /.*\.svg$/,
+            attributes: { as: 'image' }
+          }
+        ]
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
@@ -797,12 +806,16 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
-      /*new CircularDependencyPlugin({
+      new CircularDependencyPlugin({
         // exclude detection of files based on a RegExp
         exclude: /node_modules/,
         // add errors to webpack instead of warnings
-        failOnError: true,
-      }),*/
+        failOnError: true
+      }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'disabled',
+        generateStatsFile: true
+      })
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
