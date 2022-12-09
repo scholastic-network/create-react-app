@@ -305,7 +305,7 @@ module.exports = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(
+      modules: ['node_modules', paths.appNodeModules, paths.workspaceRootNodeModules].concat(
         modules.additionalModulePaths || []
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
@@ -326,12 +326,7 @@ module.exports = function (webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
-        ...(modules.webpackAliases || {}),
-        react: path.resolve('./node_modules/react'),
-        'react-router-dom': path.resolve('./node_modules/react-router-dom'),
-        'scholastic-client-components': path.resolve(
-          '../scholastic-client-components/index.ts'
-        ),
+        ...(modules.webpackAliases || {})
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).

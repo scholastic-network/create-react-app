@@ -103,7 +103,7 @@ module.exports = {
   appWebpackCache: resolveApp('node_modules/.cache'),
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   lib: resolveApp(`./../scholastic-client-components`),
-  libNodeModules: resolveApp(`./../scholastic-client-components/nodeModules`),
+  workspaceRootNodeModules: resolveApp('./../../node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   // These properties only exist before ejecting:
