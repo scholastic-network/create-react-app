@@ -89,7 +89,8 @@
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^6.4.1",
     "circular-dependency-plugin": "^5.2.2",
-    "@principalstudio/html-webpack-inject-preload": "^1.2.7"
+    "@principalstudio/html-webpack-inject-preload": "^1.2.7",
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "devDependencies": {
     "react": "^17.0.2",
