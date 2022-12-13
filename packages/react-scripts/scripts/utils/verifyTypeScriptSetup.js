@@ -105,8 +105,8 @@ function verifyTypeScriptSetup() {
     console.error(
       chalk.bold(
         'If you are not trying to use TypeScript, please remove the ' +
-          chalk.cyan('tsconfig.json') +
-          ' file from your package root (and any TypeScript files).'
+        chalk.cyan('tsconfig.json') +
+        ' file from your package root (and any TypeScript files).'
       )
     );
     console.error();
@@ -122,7 +122,7 @@ function verifyTypeScriptSetup() {
       suggested: 'es5',
     },
     lib: { suggested: ['dom', 'dom.iterable', 'esnext'] },
-    allowJs: { suggested: true },
+    allowJs: { value: false },
     skipLibCheck: { suggested: true },
     esModuleInterop: { suggested: true },
     allowSyntheticDefaultImports: { suggested: true },
@@ -144,19 +144,24 @@ function verifyTypeScriptSetup() {
     },
     resolveJsonModule: { value: true, reason: 'to match webpack loader' },
     isolatedModules: { value: true, reason: 'implementation limitation' },
-    noEmit: { value: true },
+    noEmit: { value: false },
     jsx: {
       parsedValue:
         hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
           ? ts.JsxEmit.ReactJSX
           : ts.JsxEmit.React,
-      value:
-        hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta')
-          ? 'react-jsx'
-          : 'react',
-      reason: 'to support the new JSX transform in React 17',
+      value: "react",
+        // if hasJsxRuntime && semver.gte(ts.version, '4.1.0-beta') then react-jsx
+      reason: 'React-jsx is needed to support the new JSX transform in React 17. So fart, using React 16.x',
     },
-    paths: { value: undefined, reason: 'aliased imports are not supported' },
+    baseUrl: { suggested: '.' },
+    paths: {
+      suggested: {
+        'scholastic-client-components': [
+          '../scholastic-client-components/index.ts',
+        ],
+      },
+    },
   };
 
   const formatDiagnosticHost = {
@@ -184,14 +189,24 @@ function verifyTypeScriptSetup() {
     // Get TS to parse and resolve any "extends"
     // Calling this function also mutates the tsconfig above,
     // adding in "include" and "exclude", but the compilerOptions remain untouched
-    let result;
-    parsedTsConfig = immer(readTsConfig, config => {
+    /*let result;
+    parsedTsConfig = immer(readTsConfig, (config) => {
       result = ts.parseJsonConfigFileContent(
         config,
         ts.sys,
         path.dirname(paths.appTsConfig)
       );
-    });
+    });*/
+    // https://github.com/facebook/create-react-app/issues/9429#issuecomment-669615656
+    parsedTsConfig = { ...readTsConfig };
+
+    const result = ts.parseJsonConfigFileContent(
+      parsedTsConfig,
+      ts.sys,
+      path.dirname(paths.appTsConfig)
+    );
+
+    ///
 
     if (result.errors && result.errors.length) {
       throw new Error(
@@ -245,7 +260,7 @@ function verifyTypeScriptSetup() {
         `${coloredOption} ${chalk.bold(
           valueToCheck == null ? 'must not' : 'must'
         )} be ${valueToCheck == null ? 'set' : chalk.cyan.bold(value)}` +
-          (reason != null ? ` (${reason})` : '')
+        (reason != null ? ` (${reason})` : '')
       );
     }
   }
@@ -253,7 +268,10 @@ function verifyTypeScriptSetup() {
   // tsconfig will have the merged "include" and "exclude" by this point
   if (parsedTsConfig.include == null) {
     appTsConfig = immer(appTsConfig, config => {
-      config.include = ['src'];
+      config.include = [
+        'src',
+        'declare.d.ts',
+        '../scholastic-client-components',];
     });
     messages.push(
       `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
@@ -290,7 +308,7 @@ function verifyTypeScriptSetup() {
   if (!fs.existsSync(paths.appTypeDeclarations)) {
     fs.writeFileSync(
       paths.appTypeDeclarations,
-      `/// <reference types="react-scripts" />${os.EOL}`
+      `/// <reference types="scholastic-react-scripts" />${os.EOL}`
     );
   }
 }

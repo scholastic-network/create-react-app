@@ -39,7 +39,15 @@
             }
         ],
         "no-case-declarations": "off",
-        "no-console": "warn",
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
         "react/no-unused-prop-types": "off",
         "react/prop-types": "off",
         "react/display-name": "off",
