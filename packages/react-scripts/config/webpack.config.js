@@ -455,6 +455,19 @@ module.exports = function (webpackEnv) {
                                 ),
                                 // @remove-on-eject-end
                                 plugins: [
+                                    [
+                                        "transform-imports",
+                                        {
+                                            /*"redux-form": {
+                                              transform: "redux-form/${member}",
+                                              preventFullImport: true,
+                                            },*/
+                                            lodash: {
+                                                transform: "lodash/${member}",
+                                                preventFullImport: true,
+                                            },
+                                        },
+                                    ],
                                     isEnvDevelopment &&
                                     shouldUseReactRefresh &&
                                     require.resolve('react-refresh/babel')
