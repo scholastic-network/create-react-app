@@ -652,8 +652,8 @@ module.exports = function (webpackEnv) {
             new HtmlWebpackInjectPreload({
                 files: [
                     {
-                        match: /.*\.svg$/,
-                        attributes: {as: 'image'}
+                        match: /PRELOAD.*\.svg$/,
+                        attributes: {as: 'image', crossorigin: true}
                     }
                 ]
             }),
