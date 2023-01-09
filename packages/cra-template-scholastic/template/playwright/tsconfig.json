@@ -1,0 +1,12 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "./",
+        "target": "es5",
+        "isolatedModules": false
+    },
+    "include": [
+        "**/*.ts",
+        "../../scholastic-client-components"
+    ]
+}

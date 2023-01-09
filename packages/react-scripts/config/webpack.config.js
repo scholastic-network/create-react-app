@@ -21,7 +21,6 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-//const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
@@ -38,7 +37,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackInjectPreload = require('@principalstudio/html-webpack-inject-preload');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -308,7 +307,7 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules, paths.libNodeModules].concat(
+      modules: ['node_modules', paths.appNodeModules, paths.workspaceRootNodeModules].concat(
         modules.additionalModulePaths || []
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
@@ -331,10 +330,7 @@ module.exports = function(webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
         react: path.resolve('./node_modules/react'),
-        'react-router-dom': path.resolve('./node_modules/react-router-dom'),
-        'scholastic-client-components': path.resolve(
-          '../scholastic-client-components/index.ts'
-        )
+        'react-router-dom': path.resolve('./node_modules/react-router-dom')
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -460,17 +456,17 @@ module.exports = function(webpackEnv) {
                 // @remove-on-eject-end
                 plugins: [
                   [
-                    "transform-imports",
+                    'transform-imports',
                     {
                       /*"redux-form": {
                         transform: "redux-form/${member}",
                         preventFullImport: true,
                       },*/
                       lodash: {
-                        transform: "lodash/${member}",
-                        preventFullImport: true,
-                      },
-                    },
+                        transform: 'lodash/${member}',
+                        preventFullImport: true
+                      }
+                    }
                   ],
                   isEnvDevelopment &&
                   shouldUseReactRefresh &&
@@ -657,7 +653,7 @@ module.exports = function(webpackEnv) {
         files: [
           {
             match: /PRELOAD.*\.svg$/,
-            attributes: {as: 'image', crossorigin: true}
+            attributes: { as: 'image', crossorigin: true }
           }
         ]
       }),
@@ -830,10 +826,11 @@ module.exports = function(webpackEnv) {
         // add errors to webpack instead of warnings
         failOnError: true
       }),
-      /*new BundleAnalyzerPlugin({
-        analyzerMode: 'disabled',
-        generateStatsFile: true
-      })*/
+      isEnvProduction && (
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static'
+        })
+      )
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

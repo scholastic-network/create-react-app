@@ -15,7 +15,7 @@
         "noEmit": true,
         "downlevelIteration": true,
         "jsx": "react",
-        "baseUrl": ".",
+        "baseUrl": "./",
         "paths": {
             "scholastic-client-components": ["../scholastic-client-components/index.ts"]
         },

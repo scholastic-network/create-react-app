@@ -8,7 +8,8 @@ import {
     ContainerLayout,
     WrappedZendeskModal,
     PageNoAccess,
-    authSelectors
+    authSelectors,
+    APIStatus,
 } from "scholastic-client-components"
 import {useSelector, useDispatch} from "react-redux"
 import {PrivateRoute} from "./lib/PrivateRoute"
@@ -41,6 +42,14 @@ export const App: React.FC = () => {
 
     const homeURL = useSelector(authSelectors.getHomePortalURL())
     const logout = useLogout()
+
+    const logoutInProgress = useSelector(authSelectors.getLogoutStatus) === APIStatus.Loading
+    if (logoutInProgress)
+        return (
+            <ContainerLayout>
+                <Loader />
+            </ContainerLayout>
+        )
 
     return (
         <>

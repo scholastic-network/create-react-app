@@ -1,0 +1,15 @@
+{
+  "cookies": [
+    {
+      "name": "dev-eco-auth",
+      "value": "c8kkne8hmrpphjer3q1ve4sv0vec53rm",
+      "domain": ".tsn.com",
+      "path": "/api/auth",
+      "expires": 1667625277,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}
