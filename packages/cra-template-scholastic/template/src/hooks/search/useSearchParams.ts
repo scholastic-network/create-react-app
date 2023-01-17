@@ -1,6 +1,6 @@
-import {useHistory} from "react-router-dom"
 import {HistoryParamValue, pushUrlHistoryParamFn, pushUrlHistoryParams} from "../../lib/routing"
 import {useMemo} from "react"
+import {useHistory, useLocation} from "react-router-dom"
 
 /**
  * Handle each search parameter individually
@@ -16,9 +16,7 @@ export const useSearchParams = (
     ...paramNames: Array<string>
 ): {[paramName: string]: {value?: string; setValue: (paramValue?: string) => void}} => {
     const history = useHistory()
-    const {
-        location: {search},
-    } = history
+    const {search} = useLocation()
 
     return useMemo(() => {
         const urlParams = new URLSearchParams(search)
@@ -50,12 +48,12 @@ export const useSearchParamsGroup: (
     (params: {[paramName: string]: HistoryParamValue}) => void
 ] = (...paramNames) => {
     const history = useHistory()
-    const {location: search} = history
+    const {search} = useLocation()
 
     const valuesInitial = paramNames.reduce((res, name) => ({...res, [name]: null}), {})
 
     const values = useMemo(() => {
-        const urlParams = new URLSearchParams(history.location.search)
+        const urlParams = new URLSearchParams(search)
         return paramNames.reduce(
             (values, paramName) => ({
                 ...values,
@@ -63,9 +61,7 @@ export const useSearchParamsGroup: (
             }),
             valuesInitial
         )
-    }, [paramNames, search, valuesInitial])
+    }, [search, paramNames, valuesInitial])
 
-    return useMemo(() => {
-        return [values, pushUrlHistoryParams(history)]
-    }, [history, values])
+    return useMemo(() => [values, pushUrlHistoryParams(history)], [history, values])
 }

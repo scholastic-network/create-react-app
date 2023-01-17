@@ -1,4 +1,4 @@
-import {GenericAPIRequest, getCallAPI} from "scholastic-client-components"
+import {GenericAPIRequest, getCallAPI} from "scholastic-client-components/src/lib/axios"
 import {RootState} from "../store/rootReducer"
 
 export const callAPI = getCallAPI<RootState>()

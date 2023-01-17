@@ -4,20 +4,20 @@ import {Route, Router} from "react-router-dom"
 import {history} from "./lib/routing"
 import {store} from "./store/store"
 import {Provider, useDispatch, useSelector} from "react-redux"
-import {
-    authSelectors,
-    AuthWrap,
-    BottomRightCornerBox,
-    configureAxios,
-    GuideTour,
-    MobileProvider,
-    Portal,
-    SocketWrapper,
-    useAuth,
-    useLogout,
-    useUpdateMessage,
-    BugsnagErrorBoundaryWrapper,
-} from "scholastic-client-components"
+import {AuthWrap} from "../../scholastic-client-components/src/features/AuthWrap/AuthWrap"
+import {BottomRightCornerBox} from "../../scholastic-client-components/src/features/BottomRightCornerBox/BottomRightCornerBox"
+import {GuideTour} from "../../scholastic-client-components/src/features/GuideTour/GuideTour"
+import {MobileProvider} from "../../scholastic-client-components/src/features/MobileContextComponent/MobileContextComponent"
+import {SocketWrapper} from "../../scholastic-client-components/src/features/SocketWrapper/SocketWrapperLazy"
+import {useLogout} from "../../scholastic-client-components/src/hooks/useLogout"
+import {useUpdateMessage} from "../../scholastic-client-components/src/hooks/useUpdateMessage"
+import {configureAxios} from "../../scholastic-client-components/src/lib/axios"
+import {BugsnagErrorBoundaryWrapper} from "../../scholastic-client-components/src/middlewares/bugsnagErrorBoundaryMiddleware"
+import {authSelectors} from "../../scholastic-client-components/src/slices/authSlice"
+import {APIStatus} from "../../scholastic-client-components/src/types/APITypes"
+import {Portal} from "../../scholastic-client-components/src/types/securityTypes"
+import {useAuth} from "../../scholastic-client-components/src/hooks/useAuth"
+import ScholasticLoader from "../../scholastic-client-components/src/ui/ScholasticLoader/ScholasticLoader"
 import {Notifications} from "./features/Notifications/Notifications"
 import {authAPI} from "./api/connectedAPI"
 
@@ -34,24 +34,26 @@ const AppSocketConnected: React.FC = () => {
 const AppWrapper: React.FC = () => {
     const dispatch = useDispatch()
 
-    const logout = useLogout({useDispatch, api: authAPI})
+    const logout = useLogout({api: authAPI, useDispatch})
     const accessAllowed = useSelector(authSelectors.getAccessAllowed)
 
     useEffect(() => {
-        // TODO: Change Portal
-        configureAxios({store, history, portal: Portal.UNKNOWN, logout})
+        configureAxios({store, history, portal: Portal.Settings, logout})
     }, [logout])
 
-    // TODO: Change Portal
-    useUpdateMessage(dispatch, "/admin/index.html")
+    const auth = useAuth(Portal.Repository, dispatch, useSelector, authAPI)
 
-    // TODO: Change Portal
-    const auth = useAuth(Portal.UNKNOWN, dispatch, useSelector, authAPI)
+    useUpdateMessage(dispatch, "/settings/update.html")
 
     return (
         <AuthWrap {...auth}>
-            <MobileProvider collapseHeaderLeftPartMinimumWidthRem={93}>
+            <MobileProvider>
                 {accessAllowed !== undefined && <Route path="/" component={AppSocketConnected} />}
+                {accessAllowed === undefined && auth.status === APIStatus.Success && (
+                    <div style={{marginTop: "10rem"}}>
+                        <ScholasticLoader />
+                    </div>
+                )}
                 <BottomRightCornerBox
                     guideNode={
                         <GuideTour
@@ -82,8 +84,8 @@ const render = () => {
     )
 }
 
+render()
+
 if (window.IS_PLAYWRIGHT) {
     window.store = store
 }
-
-render()

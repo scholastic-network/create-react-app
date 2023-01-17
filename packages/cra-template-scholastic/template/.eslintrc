@@ -10,7 +10,6 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
-        "prettier/@typescript-eslint",
         "plugin:prettier/recommended"
     ],
     "parserOptions": {
@@ -30,7 +29,6 @@
         }
     },
     "rules": {
-        "linebreak-style": ["error", "windows"],
         "indent": [
             0,
             4,
@@ -39,15 +37,7 @@
             }
         ],
         "no-case-declarations": "off",
-        "no-console": [
-            "error",
-            {
-                "allow": [
-                    "warn",
-                    "error"
-                ]
-            }
-        ],
+        "no-console": "warn",
         "react/no-unused-prop-types": "off",
         "react/prop-types": "off",
         "react/display-name": "off",

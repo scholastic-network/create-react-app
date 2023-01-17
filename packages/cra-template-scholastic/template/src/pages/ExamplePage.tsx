@@ -1,5 +1,5 @@
 import React from "react"
-import {BasePageTemplate} from "scholastic-client-components"
+import {BasePageTemplate} from "scholastic-client-components/src/ui/BasePageTemplate"
 
 export const ExamplePage: React.FC = () => (
     <BasePageTemplate>

@@ -8,8 +8,8 @@ const config: PlaywrightTestConfig = {
         headless: true,
     },
     webServer: {
-        command: "yarn run start-admin", // TODO: Change Portal
-        url: "http://school.tsn.com/admin/", // TODO: Change Portal
+        command: "yarn run start-settings", // TODO: Change Portal
+        url: "http://school.tsn.com/settings/", // TODO: Change Portal
         timeout: 120 * 1000,
         reuseExistingServer: true,
     },

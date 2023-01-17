@@ -1,0 +1,49 @@
+{
+  "name": "scholastic-portal-settings",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/react-redux": "^7.1.25",
+    "@types/redux-form": "^8.3.5",
+    "browser-update": "^3.3.44",
+    "react-redux": "^7.2.9",
+    "react-router-dom": "^5.3.4",
+    "redux": "^4.2.0",
+    "redux-form": "^8.3.9",
+    "scholastic-react-scripts": "file:./../../create-react-app/packages/react-scripts"
+  },
+    "devDependencies": {
+        "@playwright/test": "^1.24.2",
+        "husky": "^8.0.0",
+        "@typescript-eslint/eslint-plugin": "^4.3.0",
+        "@typescript-eslint/parser": "^4.3.0",
+        "eslint-config-prettier": "^6.12.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.21.2",
+        "prettier": "^2.1.2"
+    },
+    "scripts": {
+        "start-settings": "react-scripts start",
+        "build": "react-settings build",
+        "analyze": "yarn webpack-bundle-analyzer build/stats.json",
+        "husky-tests": "npx playwright test --config=playwright-husky.config.ts",
+        "prepare": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\"",
+        "tests": "npx playwright test"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+            "iOS >= 14.1"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}
