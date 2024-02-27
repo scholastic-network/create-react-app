@@ -349,6 +349,7 @@ module.exports = function(webpackEnv) {
     },
     module: {
       strictExportPresence: true,
+      noParse: [/videojs-contrib-hls/],
       rules: [
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
