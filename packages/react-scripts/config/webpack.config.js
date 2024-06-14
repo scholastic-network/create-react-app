@@ -363,6 +363,15 @@ module.exports = function(webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
+            {
+              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+              type: 'asset',
+              parser: {
+                dataUrlCondition: {
+                  maxSize: imageInlineSizeLimit
+                }
+              }
+            },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
             {
@@ -573,7 +582,13 @@ module.exports = function(webpackEnv) {
                     : isEnvDevelopment,
                   modules: {
                     mode: 'icss'
-                  }
+                  },
+                  url: {
+                    filter: (url, resourcePath) => {
+                      // Only process relative URLs
+                      return !url.includes('/res/media');
+                    }
+                  },
                 },
                 'sass-loader'
               ),
@@ -601,6 +616,14 @@ module.exports = function(webpackEnv) {
                 'sass-loader'
               )
             },
+            {
+              test: /\.(ttf|woff|woff2)$/,
+              exclude: /node_modules/,
+              type: 'asset/resource',
+              generator: {
+                filename: 'static/media/fonts/[name][ext]'
+              }
+            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -611,7 +634,7 @@ module.exports = function(webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/, /\.(ttf|woff|woff2)$/],
               type: 'asset/resource'
             }
             // ** STOP ** Are you adding a new loader?
