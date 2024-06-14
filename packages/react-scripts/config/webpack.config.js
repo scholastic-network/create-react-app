@@ -616,14 +616,6 @@ module.exports = function(webpackEnv) {
                 'sass-loader'
               )
             },
-            {
-              test: /\.(ttf|woff|woff2)$/,
-              exclude: /node_modules/,
-              type: 'asset/resource',
-              generator: {
-                filename: 'static/media/fonts/[name][ext]'
-              }
-            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
