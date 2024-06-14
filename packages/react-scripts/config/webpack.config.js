@@ -130,15 +130,7 @@ module.exports = function(webpackEnv) {
       },
       {
         loader: require.resolve('css-loader'),
-        options: {
-          ...cssOptions,
-          url: {
-            filter: (url, resourcePath) => {
-              // Only process relative URLs
-              return !url.includes('/res/media');
-            }
-          },
-        }
+        options: cssOptions
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -581,7 +573,7 @@ module.exports = function(webpackEnv) {
                     : isEnvDevelopment,
                   modules: {
                     mode: 'icss'
-                  },
+                  }
                 },
                 'sass-loader'
               ),
@@ -608,14 +600,6 @@ module.exports = function(webpackEnv) {
                 },
                 'sass-loader'
               )
-            },
-            {
-              test: /\.(ttf|woff|woff2)$/,
-              exclude: /node_modules/,
-              type: 'asset/resource',
-              generator: {
-                filename: 'static/media/fonts/[name][ext]'
-              }
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
